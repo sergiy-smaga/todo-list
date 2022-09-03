@@ -1,24 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react";
+import "./App.css";
+import TodoList from "./components/TodoList/TodoList";
+import AddTodoForm from "./components/AddTodoForm/AddTodoForm";
+import { getTodoList } from "./service/api";
+// import { useTodos } from "./redux/todoSlice";
+import { useState } from "react";
+
+interface ITodo {
+  id: string;
+  text: string;
+  isCompleted: boolean;
+  isFavorite: boolean;
+}
+
+export interface ITodos {
+  todos: ITodo[];
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <AddTodoForm />
+      <TodoList />
     </div>
   );
 }
