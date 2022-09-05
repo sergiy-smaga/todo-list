@@ -1,7 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 // import type { PayloadAction } from "@reduxjs/toolkit";
 // import type { RootState } from "./store";
-import { fetchTodos, addPostedTodo, deleteTodoThunk } from "./todoOperations";
+import {
+  fetchTodos,
+  addPostedTodo,
+  deleteTodoThunk,
+  changeTodo,
+} from "./todoOperations";
 
 // interface ITodo {
 //   id: string;
@@ -25,6 +30,8 @@ export const todoSlice = createSlice({
     },
     [deleteTodoThunk.fulfilled]: (state, { payload }) =>
       state.filter(({ id }) => id !== payload.id),
+    [changeTodo.fulfilled]: (state, { payload }) =>
+      state.map((todo) => (todo.id === payload.id ? payload : todo)),
   },
 });
 

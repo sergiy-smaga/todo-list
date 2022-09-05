@@ -1,28 +1,17 @@
-import { useState } from "react";
-import { addPostedTodo } from "../../redux/todoOperations";
-import { useDispatch } from "react-redux";
-
-// interface ITodo {
-//   id: string;
-//   text: string;
-//   isCompleted: boolean;
-//   isFavorite: boolean;
-// }
-
-// interface Props {
-//   onSubmit: (response: ITodo) => void;
-// }
+import { useState } from 'react';
+import { addPostedTodo } from '../../redux/todoOperations';
+import { useDispatch } from 'react-redux';
 
 const AddTodoForm = () => {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState('');
 
   const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
     if (!value.trim()) return;
     dispatch(addPostedTodo(value));
-    setValue("");
+    setValue('');
   };
 
   return (
@@ -31,7 +20,7 @@ const AddTodoForm = () => {
         <textarea
           name="todo"
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={e => setValue(e.target.value)}
         />
       </label>
       <button>Add new todo</button>
