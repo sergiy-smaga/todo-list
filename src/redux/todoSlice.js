@@ -1,26 +1,15 @@
-import { createSlice } from "@reduxjs/toolkit";
-// import type { PayloadAction } from "@reduxjs/toolkit";
-// import type { RootState } from "./store";
+import { useDispatch, useSelector } from 'react-redux';
+import { createSlice } from '@reduxjs/toolkit';
 import {
   fetchTodos,
   addPostedTodo,
   deleteTodoThunk,
   changeTodo,
-} from "./todoOperations";
-
-// interface ITodo {
-//   id: string;
-//   text: string;
-//   isCompleted: boolean;
-//   isFavorite: boolean;
-// }
-
-// export interface ITodos {
-//   todos: ITodo[];
-// }
+} from './todoOperations';
+import { useEffect } from 'react';
 
 export const todoSlice = createSlice({
-  name: "todos",
+  name: 'todos',
   initialState: [],
   reducers: {},
   extraReducers: {
@@ -31,20 +20,40 @@ export const todoSlice = createSlice({
     [deleteTodoThunk.fulfilled]: (state, { payload }) =>
       state.filter(({ id }) => id !== payload.id),
     [changeTodo.fulfilled]: (state, { payload }) =>
-      state.map((todo) => (todo.id === payload.id ? payload : todo)),
+      state.map(todo => (todo.id === payload.id ? payload : todo)),
   },
 });
 
 export default todoSlice.reducer;
 
-export const getTodos = (state) => state.todos;
+export const getTodos = state => state.todos;
 
-// export const useTodos = () => {
-//   const dispatch = useDispatch();
-//   const todos = useSelector(getTodos);
-//   // const handleSetTodos = (todos: []) => dispatch(setAllTodos(todos));
-//   return {
-//     todos,
-//     // handleSetTodos,
-//   };
-// };
+export const getTodosCompleted = state =>
+  state.todos.filter(({ isCompleted }) => isCompleted);
+
+export const getTodosInProgress = state =>
+  state.todos.filter(({ isCompleted }) => !isCompleted);
+
+export const getTodosFavorite = state =>
+  state.todos.filter(
+    ({ isFavorite, isCompleted }) => isFavorite && !isCompleted
+  );
+
+export const useTodos = () => {
+  const dispatch = useDispatch();
+  const todos = useSelector(getTodos);
+  const todosCompleted = useSelector(getTodosCompleted);
+  const todosInProgress = useSelector(getTodosInProgress);
+  const todosFavorite = useSelector(getTodosFavorite);
+
+  useEffect(() => {
+    dispatch(fetchTodos());
+  }, [dispatch]);
+
+  return {
+    todos,
+    todosCompleted,
+    todosInProgress,
+    todosFavorite,
+  };
+};

@@ -1,13 +1,22 @@
 import { deleteTodoThunk, changeTodo } from '../../redux/todoOperations';
 import { useDispatch } from 'react-redux';
 import { useState, useRef } from 'react';
+import { Modal } from '../Modal/Modal';
 
 export default function TodoItem({ item }) {
   const dispatch = useDispatch();
-  const { id, text, isFavorite, isCompleted } = item;
+  const { id, text, date, isFavorite, isCompleted } = item;
   const [editMode, setEditMode] = useState(false);
+  const [isModalOpened, setIsModalOpened] = useState(false);
+
   const textAreaRef = useRef();
 
+  const createdAt = new Date(date);
+
+  const deleteClick = () => {
+    dispatch(deleteTodoThunk(id));
+    setIsModalOpened(prev => !prev);
+  };
   const handleKeyDown = e => {
     if (e.code === 'Enter') {
       dispatch(
@@ -71,16 +80,24 @@ export default function TodoItem({ item }) {
             <button onClick={() => handleEditor(text)}>Edit</button>
           </li>
           <li>
-            <button
-              onClick={() => {
-                dispatch(deleteTodoThunk(id));
-              }}
-            >
+            <button onClick={() => setIsModalOpened(prev => !prev)}>
               Delete
             </button>
           </li>
         </ul>
       </div>
+      {isModalOpened && (
+        <Modal onClose={() => setIsModalOpened(prev => !prev)}>
+          <button onClick={() => setIsModalOpened(prev => !prev)}>Close</button>
+          <h2>Are you going to delete task?</h2>
+          <p>{text}</p>
+          <p> Created at: {createdAt.toLocaleString()}</p>
+          <button onClick={() => setIsModalOpened(prev => !prev)}>
+            Cancel
+          </button>
+          <button onClick={deleteClick}>Yes, delete</button>
+        </Modal>
+      )}
     </li>
   );
 }
